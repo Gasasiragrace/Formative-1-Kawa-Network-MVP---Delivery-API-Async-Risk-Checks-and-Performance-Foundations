@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Delivery, Farmer, Plot
+from .models import Delivery, Farmer, Plot, PriceSchedule
 
 
 class FarmerSerializer(serializers.ModelSerializer):
@@ -36,3 +36,9 @@ class DeliverySerializer(serializers.ModelSerializer):
         if value <= 0:
             raise serializers.ValidationError("Weight must be greater than 0.")
         return value
+
+
+class PriceScheduleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PriceSchedule
+        fields = ['id', 'season', 'grade', 'price_per_kg']

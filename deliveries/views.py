@@ -1,10 +1,12 @@
-from django.shortcuts import render
-
-# Create your views here.
 from rest_framework import generics
 
-from .models import Delivery, Farmer, Plot
-from .serializers import DeliverySerializer, FarmerSerializer, PlotSerializer
+from .models import Delivery, Farmer, Plot, PriceSchedule
+from .serializers import (
+    DeliverySerializer,
+    FarmerSerializer,
+    PlotSerializer,
+    PriceScheduleSerializer,
+)
 
 
 class FarmerListCreateView(generics.ListCreateAPIView):
@@ -33,3 +35,9 @@ class DeliveryListCreateView(generics.ListCreateAPIView):
         if station:
             queryset = queryset.filter(plot__station=station)
         return queryset
+
+
+class PriceScheduleView(generics.ListAPIView):
+    queryset = PriceSchedule.objects.all().order_by('season', 'grade')
+    serializer_class = PriceScheduleSerializer
+    pagination_class = None
