@@ -34,3 +34,16 @@ OpenAPI schema: schema.yml. Regenerate with: python manage.py spectacular --file
 
 ## AI-use annex
 I used an AI assistant for debugging help (settings errors, git and terminal commands) and to format ADR.md and README.md. The ADR reasoning and design decisions are my own.
+
+## Delivery recording and validation
+Record a delivery (linked to a plot):
+
+    curl -X POST http://127.0.0.1:8000/api/deliveries/ -H "Content-Type: application/json" -d '{"plot":1,"weight_kg":"25.5"}'
+
+Response: {"id":2,"plot":1,"weight_kg":"25.50","delivered_at":"2026-09-29T21:46:22.998685Z"}
+
+Invalid input returns field-level errors:
+
+    curl -X POST http://127.0.0.1:8000/api/deliveries/ -H "Content-Type: application/json" -d '{"plot":999,"weight_kg":"-5"}'
+
+Response: {"plot":["Invalid pk \"999\" - object does not exist."],"weight_kg":["Ensure this value is greater than or equal to 0.01."]}

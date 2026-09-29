@@ -134,21 +134,3 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'Kawa Network API',
     'VERSION': '1.0.0',
 }
-
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-}
-
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'Kawa Network API',
-    'VERSION': '1.0.0',
-}
-
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-}
-
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'Kawa Network API',
-    'VERSION': '1.0.0',
-}
