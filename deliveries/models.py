@@ -48,3 +48,20 @@ class PriceSchedule(models.Model):
 
     def __str__(self) -> str:
         return f"{self.season} {self.grade}: {self.price_per_kg}/kg"
+
+
+class RiskCheckAttempt(models.Model):
+    OUTCOME_CHOICES = [
+        ('clear', 'Clear'),
+        ('flagged', 'Flagged'),
+        ('error', 'Error'),
+    ]
+
+    plot = models.ForeignKey(Plot, on_delete=models.CASCADE, related_name='risk_attempts')
+    attempted_at = models.DateTimeField(auto_now_add=True)
+    outcome = models.CharField(max_length=10, choices=OUTCOME_CHOICES)
+    detail = models.CharField(max_length=255, blank=True)
+    duration_ms = models.PositiveIntegerField(default=0)
+
+    def __str__(self) -> str:
+        return f"Plot {self.plot_id} attempt: {self.outcome}"
