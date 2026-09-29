@@ -1,6 +1,7 @@
 from rest_framework import generics
 
 from .models import Delivery, Farmer, Plot, PriceSchedule
+from .pagination import DeliveryFeedPagination
 from .serializers import (
     DeliverySerializer,
     FarmerSerializer,
@@ -26,11 +27,12 @@ class PlotListCreateView(generics.ListCreateAPIView):
 
 
 class DeliveryListCreateView(generics.ListCreateAPIView):
-    """Station feed: newest first, optionally filtered with ?station=..."""
+    """Station feed: newest first, cursor-paginated, filter with ?station=..."""
     serializer_class = DeliverySerializer
+    pagination_class = DeliveryFeedPagination
 
     def get_queryset(self):
-        queryset = Delivery.objects.select_related('plot').order_by('-delivered_at')
+        queryset = Delivery.objects.select_related('plot')
         station = self.request.query_params.get('station')
         if station:
             queryset = queryset.filter(plot__station=station)
