@@ -125,12 +125,3 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-}
-
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'Kawa Network API',
-    'DESCRIPTION': 'Delivery API with async risk checks for coffee traceability.',
-    'VERSION': '0.1.0',
-}
