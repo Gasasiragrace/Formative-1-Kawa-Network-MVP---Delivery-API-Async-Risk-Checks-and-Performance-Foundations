@@ -1,5 +1,5 @@
-from django.db import models
 from django.core.validators import MinValueValidator
+from django.db import models
 
 
 class Farmer(models.Model):
@@ -7,7 +7,7 @@ class Farmer(models.Model):
     phone_number = models.CharField(max_length=20)
     national_id = models.CharField(max_length=30, unique=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -24,7 +24,7 @@ class Plot(models.Model):
     ]
     risk_status = models.CharField(max_length=20, choices=RISK_STATUS_CHOICES, default='pending')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Plot ({self.sector}, {self.station})"
 
 
@@ -33,9 +33,18 @@ class Delivery(models.Model):
     weight_kg = models.DecimalField(
         max_digits=6,
         decimal_places=2,
-        validators=[MinValueValidator(0.01)]
+        validators=[MinValueValidator(0.01)],
     )
     delivered_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Delivery of {self.weight_kg}kg from {self.plot}"
+
+
+class PriceSchedule(models.Model):
+    season = models.CharField(max_length=20)
+    grade = models.CharField(max_length=20)
+    price_per_kg = models.DecimalField(max_digits=8, decimal_places=2)
+
+    def __str__(self) -> str:
+        return f"{self.season} {self.grade}: {self.price_per_kg}/kg"
