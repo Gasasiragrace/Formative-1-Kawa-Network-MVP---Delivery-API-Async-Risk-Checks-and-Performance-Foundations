@@ -42,8 +42,10 @@ curl http://127.0.0.1:8000/api/price-schedule/
 ## Performance feature
 The delivery feed (`GET /api/deliveries/`) is cursor-paginated (`next`, `previous`, `results`) for harvest-peak volume on slow connections. See ADR.md.
 
-## API schema
 
+## API schema
+OpenAPI schema: `schema.yml`. Regenerate with:
+python manage.py spectacular --file schema.yml
 
 
 ## AI-use annex
