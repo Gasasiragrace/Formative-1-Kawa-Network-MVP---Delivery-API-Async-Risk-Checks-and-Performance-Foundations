@@ -1,8 +1,7 @@
 openapi: 3.0.3
 info:
   title: Kawa Network API
-  version: 0.1.0
-  description: Delivery API with async risk checks for coffee traceability.
+  version: 1.0.0
 paths:
   /api/deliveries/:
     get:
