@@ -1,0 +1,292 @@
+openapi: 3.0.3
+info:
+  title: Kawa Network API
+  version: 1.0.0
+paths:
+  /api/deliveries/:
+    get:
+      operationId: deliveries_list
+      description: 'Station feed: newest first, cursor-paginated, filter with ?station=...'
+      parameters:
+      - name: cursor
+        required: false
+        in: query
+        description: The pagination cursor value.
+        schema:
+          type: string
+      tags:
+      - deliveries
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDeliveryList'
+          description: ''
+    post:
+      operationId: deliveries_create
+      description: 'Station feed: newest first, cursor-paginated, filter with ?station=...'
+      tags:
+      - deliveries
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Delivery'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Delivery'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Delivery'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+          description: ''
+  /api/farmers/:
+    get:
+      operationId: farmers_list
+      tags:
+      - farmers
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Farmer'
+          description: ''
+    post:
+      operationId: farmers_create
+      tags:
+      - farmers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Farmer'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Farmer'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Farmer'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Farmer'
+          description: ''
+  /api/plots/:
+    get:
+      operationId: plots_list
+      tags:
+      - plots
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Plot'
+          description: ''
+    post:
+      operationId: plots_create
+      tags:
+      - plots
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Plot'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Plot'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Plot'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plot'
+          description: ''
+  /api/price-schedule/:
+    get:
+      operationId: price_schedule_list
+      tags:
+      - price-schedule
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PriceSchedule'
+          description: ''
+components:
+  schemas:
+    Delivery:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        plot:
+          type: integer
+        weight_kg:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        delivered_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - delivered_at
+      - id
+      - plot
+      - weight_kg
+    Farmer:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        phone_number:
+          type: string
+          maxLength: 20
+        national_id:
+          type: string
+          maxLength: 30
+      required:
+      - id
+      - name
+      - national_id
+      - phone_number
+    PaginatedDeliveryList:
+      type: object
+      required:
+      - results
+      properties:
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?cursor=cD00ODY%3D"
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?cursor=cj0xJnA9NDg3
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Delivery'
+    Plot:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        farmer:
+          type: integer
+        sector:
+          type: string
+          maxLength: 100
+        station:
+          type: string
+          maxLength: 100
+        risk_status:
+          allOf:
+          - $ref: '#/components/schemas/RiskStatusEnum'
+          readOnly: true
+      required:
+      - farmer
+      - id
+      - risk_status
+      - sector
+      - station
+    PriceSchedule:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        season:
+          type: string
+          maxLength: 20
+        grade:
+          type: string
+          maxLength: 20
+        price_per_kg:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+      required:
+      - grade
+      - id
+      - price_per_kg
+      - season
+    RiskStatusEnum:
+      enum:
+      - pending
+      - clear
+      - flagged
+      - check_failed
+      type: string
+      description: |-
+        * `pending` - Pending
+        * `clear` - Clear
+        * `flagged` - Flagged
+        * `check_failed` - Check Failed
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
